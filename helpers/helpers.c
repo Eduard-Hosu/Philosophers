@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   helpers.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehosu <ehosu@student.42wolfsburg.de>       +#+  +:+       +#+        */
+/*   By: aricholm <aricholm@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 17:00:45 by ehosu             #+#    #+#             */
-/*   Updated: 2022/03/16 16:12:14 by ehosu            ###   ########.fr       */
+/*   Updated: 2022/03/16 17:29:12 by aricholm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ void	print_activity(t_phil *phil, t_action action)
 		pthread_mutex_lock(&phil->config->m_gameover);
 		phil->config->game_over = true;
 		pthread_mutex_unlock(&phil->config->m_gameover);
-		pthread_mutex_unlock(&phil->p_fork);
 	}
 }
 
@@ -72,12 +71,12 @@ void	check_ho_dies(t_config *config)
 	{
 		if (phil == config->last && config->times_to_eat)
 			done_eating = true;
-		if (get_time() > phil->die)
+		if (get_time() > get_death_time(phil))
 		{
 			print_activity(phil, DEAD);
 			return ;
 		}
-		if (phil->t_eaten < config->times_to_eat)
+		if (get_times_eaten(phil) < config->times_to_eat)
 			done_eating = false;
 		phil = phil->next;
 		if (phil == config->last && done_eating)

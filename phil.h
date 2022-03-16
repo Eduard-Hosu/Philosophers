@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   phil.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehosu <ehosu@student.42wolfsburg.de>       +#+  +:+       +#+        */
+/*   By: aricholm <aricholm@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 16:39:46 by ehosu             #+#    #+#             */
-/*   Updated: 2022/03/16 16:13:05 by ehosu            ###   ########.fr       */
+/*   Updated: 2022/03/16 17:14:19 by aricholm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ t_bool		number(char *str);
 int			phil_atoi(const char *str);
 t_bool		config_data(t_config *config, char **argv);
 t_bool		is_game_over(t_config *config);
+int			get_times_eaten(t_phil *phil);
+long		get_death_time(t_phil *phil);
 long int	get_time();
 void		phil_eat(t_phil *phil);
 void		phil_sleep(t_phil *phil);

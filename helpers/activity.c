@@ -6,7 +6,7 @@
 /*   By: ehosu <ehosu@student.42wolfsburg.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 19:37:20 by ehosu             #+#    #+#             */
-/*   Updated: 2022/03/16 15:23:09 by ehosu            ###   ########.fr       */
+/*   Updated: 2022/03/16 18:04:33 by ehosu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,10 @@ void	phil_eat(t_phil *phil)
 	print_activity(phil, FORK);
 	//print_activity eat
 	print_activity(phil, EAT);
+	pthread_mutex_lock(&phil->config->m_gameover);
 	phil->t_eaten++;
 	phil->die = get_time() + phil->config->time_to_die;
+	pthread_mutex_unlock(&phil->config->m_gameover);
 	activity_time(phil->config, phil->config->time_to_eat);
 	pthread_mutex_unlock(second_fork);
 	pthread_mutex_unlock(first_fork);

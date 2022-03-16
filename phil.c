@@ -6,7 +6,7 @@
 /*   By: ehosu <ehosu@student.42wolfsburg.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 14:28:53 by ehosu             #+#    #+#             */
-/*   Updated: 2022/03/16 16:20:13 by ehosu            ###   ########.fr       */
+/*   Updated: 2022/03/16 17:46:33 by ehosu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,32 @@
 
 t_bool is_game_over(t_config *config)
 {
-	t_bool done;
+	t_bool	done;
 
 	pthread_mutex_lock(&config->m_gameover);
 	done = config->game_over;
 	pthread_mutex_unlock(&config->m_gameover);
 	return (done);
+}
+
+int	get_times_eaten(t_phil *phil)
+{
+	int	eaten;
+
+	pthread_mutex_lock(&phil->config->m_gameover);
+	eaten = phil->t_eaten;
+	pthread_mutex_unlock(&phil->config->m_gameover);
+	return (eaten);
+}
+
+long	get_death_time(t_phil *phil)
+{
+	long	death_time;
+
+	pthread_mutex_lock(&phil->config->m_gameover);
+	death_time = phil->die;
+	pthread_mutex_unlock(&phil->config->m_gameover);
+	return (death_time);
 }
 
 void	*phil_activity(void *arg)
@@ -29,15 +49,18 @@ void	*phil_activity(void *arg)
 
 	phil = (t_phil *)arg;
 	config = phil->config;
+	if (config->n_philo == 1)
+	{
+		print_activity(phil, FORK);
+		usleep(config->time_to_die * 1000);
+		print_activity(phil, DEAD);
+		return (NULL);
+	}
 	//every second philosopher will wait for the rest to eat
 	if (phil->id % 2)
 		usleep(phil->config->time_to_eat * 1000);
-	while (1)
+	while (!is_game_over(config))
 	{
-		pthread_mutex_lock(&config->m_gameover);
-		if (config->game_over)
-			return (0);
-		pthread_mutex_unlock(&config->m_gameover);
 		phil_eat(phil);
 		phil_sleep(phil);
 		phil_think(phil);
