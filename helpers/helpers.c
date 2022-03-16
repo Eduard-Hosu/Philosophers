@@ -6,7 +6,7 @@
 /*   By: ehosu <ehosu@student.42wolfsburg.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 17:00:45 by ehosu             #+#    #+#             */
-/*   Updated: 2022/03/15 10:23:12 by ehosu            ###   ########.fr       */
+/*   Updated: 2022/03/16 16:12:14 by ehosu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,16 +48,17 @@ char	*get_action(t_action action)
 void	print_activity(t_phil *phil, t_action action)
 {
 	pthread_mutex_lock(&phil->config->write_status);
-	if (!phil->config->game_over)
+	if (!is_game_over(phil->config))
 		printf("%08ld: %ld %s\n", get_time() - phil->config->start_game,
 			phil->id, get_action(action));
+	pthread_mutex_unlock(&phil->config->write_status);
 	if (action == DEAD)
 	{
+		pthread_mutex_lock(&phil->config->m_gameover);
 		phil->config->game_over = true;
-		//is this neceserry ?!
+		pthread_mutex_unlock(&phil->config->m_gameover);
 		pthread_mutex_unlock(&phil->p_fork);
 	}
-	pthread_mutex_unlock(&phil->config->write_status);
 }
 
 void	check_ho_dies(t_config *config)
@@ -67,9 +68,8 @@ void	check_ho_dies(t_config *config)
 
 	phil = config->last;
 	done_eating = false;
-	while (!config->game_over)
+	while (!is_game_over(config))
 	{
-		//why is this needed ?!
 		if (phil == config->last && config->times_to_eat)
 			done_eating = true;
 		if (get_time() > phil->die)
@@ -79,11 +79,12 @@ void	check_ho_dies(t_config *config)
 		}
 		if (phil->t_eaten < config->times_to_eat)
 			done_eating = false;
-		//why is this needed ?!
 		phil = phil->next;
 		if (phil == config->last && done_eating)
 		{
+			pthread_mutex_lock(&phil->config->m_gameover);
 			config->game_over = true;
+			pthread_mutex_unlock(&phil->config->m_gameover);
 			return ;
 		}
 	}

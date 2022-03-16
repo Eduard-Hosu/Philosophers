@@ -6,7 +6,7 @@
 /*   By: ehosu <ehosu@student.42wolfsburg.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 16:39:46 by ehosu             #+#    #+#             */
-/*   Updated: 2022/03/15 17:10:00 by ehosu            ###   ########.fr       */
+/*   Updated: 2022/03/16 16:13:05 by ehosu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ typedef struct s_phil
 	size_t				id;
 	pthread_t			thread;
 	int					t_eaten;
-	int					die;
+	long				die;
 	pthread_mutex_t		p_fork;
 	struct s_phil		*next;
 	struct s_config		*config;
@@ -43,6 +43,7 @@ typedef struct s_config
 	int				time_to_sleep;
 	long int		start_game;
 	pthread_mutex_t	write_status;
+	pthread_mutex_t m_gameover;
 	t_phil			*last;
 	volatile t_bool	game_over;
 }	t_config;
@@ -51,6 +52,7 @@ void		first_to_last(t_config *config);
 t_bool		number(char *str);
 int			phil_atoi(const char *str);
 t_bool		config_data(t_config *config, char **argv);
+t_bool		is_game_over(t_config *config);
 long int	get_time();
 void		phil_eat(t_phil *phil);
 void		phil_sleep(t_phil *phil);

@@ -6,7 +6,7 @@
 /*   By: ehosu <ehosu@student.42wolfsburg.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 19:37:20 by ehosu             #+#    #+#             */
-/*   Updated: 2022/03/15 18:32:16 by ehosu            ###   ########.fr       */
+/*   Updated: 2022/03/16 15:23:09 by ehosu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,8 @@ void	activity_time(t_config *config, int m_sec)
 {
 	long int	current_time;
 
-	// (void)(config);
 	current_time = get_time();
-	// while (1)
-	while (!config->game_over)
+	while (!is_game_over(config))
 	{
 		if (get_time() > current_time + m_sec)
 			return ;
@@ -30,10 +28,23 @@ void	activity_time(t_config *config, int m_sec)
 
 void	phil_eat(t_phil *phil)
 {
-	pthread_mutex_lock(&phil->p_fork);
+	pthread_mutex_t *first_fork;
+	pthread_mutex_t *second_fork;
+
+	if (phil->id % 2)
+	{
+		first_fork = &phil->p_fork;
+		second_fork = &phil->next->p_fork;
+	}
+	else
+	{
+		first_fork = &phil->next->p_fork;
+		second_fork = &phil->p_fork;
+	}
+	pthread_mutex_lock(first_fork);
 	print_activity(phil, FORK);
 	//print_activity grab fork
-	pthread_mutex_lock(&phil->next->p_fork);
+	pthread_mutex_lock(second_fork);
 	//print_activity grab fork
 	print_activity(phil, FORK);
 	//print_activity eat
@@ -41,8 +52,8 @@ void	phil_eat(t_phil *phil)
 	phil->t_eaten++;
 	phil->die = get_time() + phil->config->time_to_die;
 	activity_time(phil->config, phil->config->time_to_eat);
-	pthread_mutex_unlock(&phil->next->p_fork);
-	pthread_mutex_unlock(&phil->p_fork);
+	pthread_mutex_unlock(second_fork);
+	pthread_mutex_unlock(first_fork);
 }
 
 void	phil_sleep(t_phil *phil)
@@ -64,9 +75,8 @@ void	game_over(t_config *config)
 	t_phil	*kill_this_one;
 
 	phil_pointer = config->last->next;
-	pthread_mutex_destroy(&config->last->p_fork);
 	pthread_join(config->last->thread, NULL);
-	//detech them some there are not zobie
+	//detech them so there are not zobies
 	while (phil_pointer != config->last)
 	{
 		pthread_join(phil_pointer->thread, NULL);
@@ -74,7 +84,7 @@ void	game_over(t_config *config)
 	}
 	//go to the "first" one
 	phil_pointer = phil_pointer->next;
-	//check this one out as well;
+	pthread_mutex_destroy(&config->last->p_fork);
 	free(config->last);
 	//kill them all;
 	while (phil_pointer != config->last)

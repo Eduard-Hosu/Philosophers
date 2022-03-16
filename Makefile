@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ehosu <ehosu@student.42wolfsburg.de>       +#+  +:+       +#+         #
+#    By: aricholm <aricholm@student.42wolfsburg.de> +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/12 18:22:39 by ehosu             #+#    #+#              #
-#    Updated: 2022/03/15 18:46:14 by ehosu            ###   ########.fr        #
+#    Updated: 2022/03/16 13:00:13 by aricholm         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ RM = rm -rf
 CC = gcc
 # -pthread
 # -lpthread
-CFLAGS = -g -Wall -Wextra -Werror
+CFLAGS = -g -Wall -Wextra -Werror -fsanitize=thread
 
 all:	$(NAME)
 
