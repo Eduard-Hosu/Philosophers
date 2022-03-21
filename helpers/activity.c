@@ -6,7 +6,7 @@
 /*   By: ehosu <ehosu@student.42wolfsburg.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 19:37:20 by ehosu             #+#    #+#             */
-/*   Updated: 2022/03/16 18:04:33 by ehosu            ###   ########.fr       */
+/*   Updated: 2022/03/21 18:17:41 by ehosu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,29 +22,16 @@ void	activity_time(t_config *config, int m_sec)
 		if (get_time() > current_time + m_sec)
 			return ;
 		//Is this needed ?!
-		usleep(600);
+		usleep(1000);
 	}
 }
 
 void	phil_eat(t_phil *phil)
 {
-	pthread_mutex_t *first_fork;
-	pthread_mutex_t *second_fork;
-
-	if (phil->id % 2)
-	{
-		first_fork = &phil->p_fork;
-		second_fork = &phil->next->p_fork;
-	}
-	else
-	{
-		first_fork = &phil->next->p_fork;
-		second_fork = &phil->p_fork;
-	}
-	pthread_mutex_lock(first_fork);
+	pthread_mutex_lock(&phil->p_fork);
 	print_activity(phil, FORK);
 	//print_activity grab fork
-	pthread_mutex_lock(second_fork);
+	pthread_mutex_lock(&phil->next->p_fork);
 	//print_activity grab fork
 	print_activity(phil, FORK);
 	//print_activity eat
@@ -54,8 +41,8 @@ void	phil_eat(t_phil *phil)
 	phil->die = get_time() + phil->config->time_to_die;
 	pthread_mutex_unlock(&phil->config->m_gameover);
 	activity_time(phil->config, phil->config->time_to_eat);
-	pthread_mutex_unlock(second_fork);
-	pthread_mutex_unlock(first_fork);
+	pthread_mutex_unlock(&phil->next->p_fork);
+	pthread_mutex_unlock(&phil->p_fork);
 }
 
 void	phil_sleep(t_phil *phil)

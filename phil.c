@@ -6,7 +6,7 @@
 /*   By: ehosu <ehosu@student.42wolfsburg.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 14:28:53 by ehosu             #+#    #+#             */
-/*   Updated: 2022/03/16 17:46:33 by ehosu            ###   ########.fr       */
+/*   Updated: 2022/03/16 18:24:39 by ehosu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,8 +115,6 @@ int main(int argc, char **argv)
 {
 	t_config	config;
 
-	// printf("here\n");
-	// exit(1);
 	if (argc < 5 || argc > 6 || !config_data(&config, argv))
 	{
 		printf("Use it like:\n");
