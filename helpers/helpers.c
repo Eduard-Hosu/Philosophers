@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   helpers.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aricholm <aricholm@student.42wolfsburg.de> +#+  +:+       +#+        */
+/*   By: ehosu <ehosu@student.42wolfsburg.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 17:00:45 by ehosu             #+#    #+#             */
-/*   Updated: 2022/03/16 17:29:12 by aricholm         ###   ########.fr       */
+/*   Updated: 2022/03/22 12:13:46 by ehosu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ long int	get_time(void)
 
 void	first_to_last(t_config *config)
 {
-	t_phil *temp_phil;
+	t_phil	*temp_phil;
 
 	temp_phil = config->last;
 	while (temp_phil->next)

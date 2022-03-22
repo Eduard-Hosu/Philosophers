@@ -6,7 +6,7 @@
 /*   By: ehosu <ehosu@student.42wolfsburg.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 21:20:04 by ehosu             #+#    #+#             */
-/*   Updated: 2022/03/15 19:38:54 by ehosu            ###   ########.fr       */
+/*   Updated: 2022/03/22 12:12:23 by ehosu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,9 @@ int	phil_atoi(const char *str)
 
 t_bool	config_data(t_config *config, char **argv)
 {
-	if(!number(argv[1]) || !number(argv[2]) || !number(argv[3]) || \
+	if (!number(argv[1]) || !number(argv[2]) || !number(argv[3]) || \
 		!number(argv[4]) || !number(argv[4]))
 		return (false);
-	// printf("in function config_data\n");
-	// exit(1);
 	if (argv[5])
 	{
 		if (number(argv[5]))

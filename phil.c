@@ -6,13 +6,13 @@
 /*   By: ehosu <ehosu@student.42wolfsburg.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 14:28:53 by ehosu             #+#    #+#             */
-/*   Updated: 2022/03/16 18:24:39 by ehosu            ###   ########.fr       */
+/*   Updated: 2022/03/22 12:31:22 by ehosu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "phil.h"
 
-t_bool is_game_over(t_config *config)
+t_bool	is_game_over(t_config *config)
 {
 	t_bool	done;
 
@@ -20,26 +20,6 @@ t_bool is_game_over(t_config *config)
 	done = config->game_over;
 	pthread_mutex_unlock(&config->m_gameover);
 	return (done);
-}
-
-int	get_times_eaten(t_phil *phil)
-{
-	int	eaten;
-
-	pthread_mutex_lock(&phil->config->m_gameover);
-	eaten = phil->t_eaten;
-	pthread_mutex_unlock(&phil->config->m_gameover);
-	return (eaten);
-}
-
-long	get_death_time(t_phil *phil)
-{
-	long	death_time;
-
-	pthread_mutex_lock(&phil->config->m_gameover);
-	death_time = phil->die;
-	pthread_mutex_unlock(&phil->config->m_gameover);
-	return (death_time);
 }
 
 void	*phil_activity(void *arg)
@@ -56,7 +36,6 @@ void	*phil_activity(void *arg)
 		print_activity(phil, DEAD);
 		return (NULL);
 	}
-	//every second philosopher will wait for the rest to eat
 	if (phil->id % 2)
 		usleep(phil->config->time_to_eat * 1000);
 	while (!is_game_over(config))
@@ -111,22 +90,20 @@ t_bool	configuration(t_config *config)
 	return (true);
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	t_config	config;
 
 	if (argc < 5 || argc > 6 || !config_data(&config, argv))
 	{
 		printf("Use it like:\n");
-		printf("./philo n_of_philosophers time_to_die time_to_eat \
-				time_to_sleep [n_of_times_each_philosopher_must_eat]\n");
+		printf("./philo n_of_philosophers time_to_die time_to_eat ");
+		printf("time_to_sleep [n_of_times_each_philosopher_must_eat]\n");
 		return (1);
 	}
 	if (configuration(&config) == false)
 		return (1);
-	//SOLVED: Check ho dies
 	check_ho_dies(&config);
-	//SOLVED: End game
 	game_over(&config);
 	return (1);
 }

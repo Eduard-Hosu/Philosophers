@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   phil.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aricholm <aricholm@student.42wolfsburg.de> +#+  +:+       +#+        */
+/*   By: ehosu <ehosu@student.42wolfsburg.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 16:39:46 by ehosu             #+#    #+#             */
-/*   Updated: 2022/03/16 17:14:19 by aricholm         ###   ########.fr       */
+/*   Updated: 2022/03/22 12:22:24 by ehosu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
 # include <pthread.h>
 # include <sys/time.h>
 
-typedef enum {SLEEP, EAT, THINK, DEAD, FORK}	t_action;
-typedef enum {false, true}	t_bool;
+typedef enum e_action { SLEEP, EAT, THINK, DEAD, FORK}	t_action;
+typedef enum e_bool { false, true}	t_bool;
 
 //Philosopher
 typedef struct s_phil
@@ -43,7 +43,7 @@ typedef struct s_config
 	int				time_to_sleep;
 	long int		start_game;
 	pthread_mutex_t	write_status;
-	pthread_mutex_t m_gameover;
+	pthread_mutex_t	m_gameover;
 	t_phil			*last;
 	volatile t_bool	game_over;
 }	t_config;
@@ -55,7 +55,7 @@ t_bool		config_data(t_config *config, char **argv);
 t_bool		is_game_over(t_config *config);
 int			get_times_eaten(t_phil *phil);
 long		get_death_time(t_phil *phil);
-long int	get_time();
+long int	get_time(void);
 void		phil_eat(t_phil *phil);
 void		phil_sleep(t_phil *phil);
 void		phil_think(t_phil *phil);
